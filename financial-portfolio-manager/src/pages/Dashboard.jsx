@@ -16,25 +16,26 @@ import {
   Toolbar,
   IconButton,
   Avatar,
-  Divider,
   useTheme
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
   TrendingUp,
-  AccountBalance,
   Timeline,
   Menu as MenuIcon,
   Notifications,
   AttachMoney,
   ShowChart,
-  PieChart as PieChartIcon
+  PieChart as PieChartIcon,
+  Assessment
 } from '@mui/icons-material';
 import { PieChart, LineChart, Line, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 import InvestmentForm from '../components/InvestmentForm';
 import InvestmentList from '../components/InvestmentList';
+import RiskMetrics from '../components/RiskMetric';
+import { getPortfolioRiskMetrics } from '../services/riskAnalysisService';
 
-// Styled components
+// Styled components remain the same
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
   display: 'flex',
@@ -57,12 +58,18 @@ const StatsCard = styled(Card)(({ theme }) => ({
 function Dashboard() {
   const theme = useTheme();
   const [tabValue, setTabValue] = React.useState(0);
-  const totalValue = useSelector((state) => state.portfolio.totalValue);
   const investments = useSelector((state) => state.portfolio.investments);
+  const totalValue = useSelector((state) => state.portfolio.totalValue);
 
   // Calculate stats
   const totalStocks = investments.filter(inv => inv.type === 'Stock').length;
   const totalCrypto = investments.filter(inv => inv.type === 'Crypto').length;
+
+  // Calculate risk metrics
+  const riskMetrics = React.useMemo(() => 
+    getPortfolioRiskMetrics(investments),
+    [investments]
+  );
 
   // Prepare data for charts
   const pieData = [
@@ -72,7 +79,7 @@ function Dashboard() {
   
   const COLORS = [theme.palette.primary.main, theme.palette.secondary.main];
 
-  // Mock performance data - you can replace this with real data
+  // Mock performance data
   const performanceData = [
     { month: 'Jan', value: totalValue * 0.9 },
     { month: 'Feb', value: totalValue * 0.95 },
@@ -86,16 +93,10 @@ function Dashboard() {
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh' }}>
-      {/* App Bar */}
+      {/* App Bar - remains the same */}
       <AppBar position="static" elevation={0}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
+          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -159,21 +160,19 @@ function Dashboard() {
             <StatsCard>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <TrendingUp sx={{ fontSize: 40, mr: 2 }} />
+                  <Assessment sx={{ fontSize: 40, mr: 2 }} />
                   <Box>
-                    <Typography variant="h6">Avg. Investment</Typography>
-                    <Typography variant="h4">
-                      ${investments.length > 0 
-                        ? (totalValue / investments.length).toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })
-                        : '0.00'}
-                    </Typography>
+                    <Typography variant="h6">Risk Level</Typography>
+                    <Typography variant="h4">{riskMetrics.riskLevel}</Typography>
                   </Box>
                 </Box>
               </CardContent>
             </StatsCard>
+          </Grid>
+
+          {/* Risk Metrics Section */}
+          <Grid item xs={12}>
+            <RiskMetrics metrics={riskMetrics} />
           </Grid>
 
           {/* Main Content */}
