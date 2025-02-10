@@ -43,7 +43,7 @@ const LoginPage = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Mock validation
-      if (credentials.email === 'user@example.com' && credentials.password === 'password') {
+      if (credentials.email === 'user@example.com' && credentials.password === 'userpassword') {
         // Call the login function from auth context
         login({ 
           email: credentials.email,
@@ -120,7 +120,7 @@ const LoginPage = () => {
           </form>
 
           <Typography variant="body2" color="textSecondary" align="center" className="mt-4">
-            Demo credentials: user@example.com / password
+            Demo credentials: user@example.com / userpassword
           </Typography>
         </CardContent>
       </Card>
