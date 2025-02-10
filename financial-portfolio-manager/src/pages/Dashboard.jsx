@@ -33,9 +33,10 @@ import { PieChart, LineChart, Line, Pie, Cell, Legend, Tooltip, ResponsiveContai
 import InvestmentForm from '../components/InvestmentForm';
 import InvestmentList from '../components/InvestmentList';
 import RiskMetrics from '../components/RiskMetric';
+import Sidebar from '../components/SideBar';
 import { getPortfolioRiskMetrics } from '../services/riskAnalysisService';
 
-// Styled components remain the same
+// Styled components
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
   display: 'flex',
@@ -58,6 +59,7 @@ const StatsCard = styled(Card)(({ theme }) => ({
 function Dashboard() {
   const theme = useTheme();
   const [tabValue, setTabValue] = React.useState(0);
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const investments = useSelector((state) => state.portfolio.investments);
   const totalValue = useSelector((state) => state.portfolio.totalValue);
 
@@ -93,10 +95,17 @@ function Dashboard() {
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh' }}>
-      {/* App Bar - remains the same */}
+      {/* App Bar */}
       <AppBar position="static" elevation={0}>
         <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+          <IconButton 
+            size="large" 
+            edge="start" 
+            color="inherit" 
+            aria-label="menu" 
+            sx={{ mr: 2 }}
+            onClick={() => setSidebarOpen(true)}
+          >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -126,6 +135,12 @@ function Dashboard() {
           </Box>
         </Toolbar>
       </AppBar>
+
+      {/* Sidebar */}
+      <Sidebar 
+        open={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+      />
 
       <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={3}>
