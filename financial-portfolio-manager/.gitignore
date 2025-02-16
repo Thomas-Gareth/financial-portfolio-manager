@@ -14,8 +14,6 @@ dist-ssr
 *.local
 eslint.config.js
 package-lock.json
-index.html
-vite.config.js
 .bin
 
 # Editor directories and files

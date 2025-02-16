@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import InvestmentAnalytics from "./pages/Investments";
 import Settings from "./pages/Settings";
+import './index.html'
 
 function App() {
   return (
